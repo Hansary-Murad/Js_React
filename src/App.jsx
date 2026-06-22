@@ -1,60 +1,136 @@
-import { useState } from "react";
+import { useState } from 'react'
 import './App.css';
-import Button from "./Button";
-import Person from "./Person";
 
-const person = {
-  name: "Murad", secondName: "Hansaryev"
-};
+// 1
+function WelcomeMessage(props) {
+  return <h1>Добро пожаловать, {props.username}!</h1>
+}
 
-const students = [
-  {
-    name: "Murad",
-    secondName: "",
-  },
-  {
-    name: "Alex",
-    secondName: "",
-  },
-  {
-    name: "Nurali",
-    secondName: "",
-  },
-];
+// 2
+function ItemList(props) {
+  return (
+    <ul>
+      {props.items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  )
+}
 
+// 3
+function ToggleButton() {
+  const [toggle, setToggle] = useState("Вкл")
+  return (
+    <button onClick={() => setToggle(!toggle)}>{toggle ? "Вкл" : "Выкл"}</button>
+  )
+}
 
-function App() {
-  const [count, setCount] = useState(0);
+// 4
+function CounterLimit() {
+  const [count, setCount] = useState(0)
+  const [msg, setMsg] = useState("")
 
-  const onClick = () => {
-    setCount(count + 1);
-  };
+  function plus() {
+    if (count >= 10) {
+      setMsg("Счётчик не может быть больше 10!")
+    } else {
+      setCount(count + 1)
+      setMsg("")
+    }
+  }
 
-  console.log('render count', count)
+  function minus() {
+    if (count <= 0) {
+      setMsg("Счётчик не может быть меньше 0!")
+    } else {
+      setCount(count - 1)
+      setMsg("")
+    }
+  }
 
   return (
-    <>
-      <h3>Count: {count}</h3>
-      <button onClick={onClick}>Click</button>
-    </>
-  );
+    <div>
+      <h2>Счетчик: {count}</h2>
+      <button onClick={plus}>+</button>
+      <button onClick={minus}>-</button>
+      <p>{msg}</p>
+    </div>
+  )
+}
 
-  // return (
-  //   <>
-  //   <h3>Hello world</h3>
-  //   <br />
-  //   <Button>Hello Click</Button>
-  //   <Button />
+// 5
+function NameForm() {
+  const [name, setName] = useState("")
+  return (
+    <div>
+      <input value={name} onChange={(e) => setName(e.target.value)} />
+      <p>Ваше имя: {name}</p>
+    </div>
+  )
+}
 
-  //   <Person name={person.name} secondName={person.secondName}/>
+// 6
+function TodoList() {
+  const [tasks, setTasks] = useState([])
+  const [val, setVal] = useState("")
 
-  //   <Person {...person}/>
+  function add() {
+    setTasks([...tasks, val])
+    setVal("")
+  }
 
-  //   <h3>Students</h3>
-    
-  //   {students.map(student => <Person {...student}/>)}
-  //   </>
-  // );
-};
+  return (
+    <div>
+      <input value={val} onChange={(e) => setVal(e.target.value)} />
+      <button onClick={add}>Добавить</button>
+      <ul>
+        {tasks.map((t, i) => <li key={i}>{t}</li>)}
+      </ul>
+    </div>
+  )
+}
 
-export default App;
+
+// 8
+function CounterHistory() {
+  const [count, setCount] = useState(0)
+  const [history, setHistory] = useState([0])
+
+  function change(newVal) {
+    setCount(newVal)
+    setHistory([...history, newVal])
+  }
+
+  return (
+    <div>
+      <h2>Счетчик: {count}</h2>
+      <button onClick={() => change(count + 1)}>+</button>
+      <button onClick={() => change(count - 1)}>-</button>
+      <p>История: [{history.join(', ')}]</p>
+    </div>
+  )
+}
+
+
+// Главный компонент
+export default function App() {
+  const fruits = ["Яблоко", "Банан", "Апельсин"]
+  
+  return (
+    <div>
+      <WelcomeMessage username="Мурад" />
+      
+      <ItemList items={fruits} />
+      
+      <ToggleButton />
+      
+      <CounterLimit />
+      
+      <NameForm />
+      
+      <TodoList />
+      
+      <CounterHistory />
+    </div>
+  )
+}
